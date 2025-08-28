@@ -32,7 +32,8 @@ body {
 }
 
 main {
-    flex-grow: 1;
+    width: calc(100% - 270px);
+    flex-shrink: 0;
 }
 
 header {
@@ -229,6 +230,7 @@ input:checked + .toggle-slider:before {
 .question-text {
     font-weight: 500;
     flex-grow: 1;
+    overflow-wrap: break-word;
 }
 
 .btn-sm {
@@ -505,3 +507,40 @@ pre {
     white-space: pre-wrap;
     word-wrap: break-word;
 }
+
+/* Add these styles to your CSS */
+
+.question-text {
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    hyphens: auto;
+}
+
+.question-header {
+    flex-wrap: wrap;
+}
+
+.flag-btn-question {
+    flex-shrink: 0;
+    margin-top: 10px;
+}
+
+/* Ensure the main content area doesn't push the sidebar */
+.container {
+    align-items: flex-start;
+}
+
+main {
+    min-width: 0; /* This allows the main content to shrink properly */
+}
+
+/* For the confirmation panel summary items */
+.summary-item {
+    word-break: break-word;
+}
+
+/* For options in questions */
+.option {
+    word-wrap: break-word;
+}
+
