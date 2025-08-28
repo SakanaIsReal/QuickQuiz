@@ -199,12 +199,12 @@ document.addEventListener('DOMContentLoaded', function() {
             button.textContent = index + 1;
             
             // Set initial classes based on state
-            if (answer.selectedOption !== null) {
-                button.classList.add('answered');
-            }
             if (answer.isFlagged) {
                 button.classList.add('flagged');
+            } else if (answer.selectedOption !== null) {
+                button.classList.add('answered');
             }
+
             if (index === currentAbsoluteIndex) {
                 button.classList.add('active');
             }
@@ -222,12 +222,12 @@ document.addEventListener('DOMContentLoaded', function() {
             
             button.classList.remove('active', 'answered', 'flagged');
             
-            if (answer.selectedOption !== null) {
-                button.classList.add('answered');
-            }
             if (answer.isFlagged) {
                 button.classList.add('flagged');
+            } else if (answer.selectedOption !== null) {
+                button.classList.add('answered');
             }
+
             if (index === currentAbsoluteIndex) {
                 button.classList.add('active');
             }
@@ -261,11 +261,22 @@ document.addEventListener('DOMContentLoaded', function() {
         const questionContainer = document.createElement('div');
         questionContainer.className = 'question-container';
         
-        // Add question text
+        // Add question text and flag button
+        const questionHeader = document.createElement('div');
+        questionHeader.className = 'question-header';
+
         const questionText = document.createElement('div');
         questionText.className = 'question-text';
         questionText.innerHTML = `<strong>Question ${currentAbsoluteIndex + 1}:</strong> ${questionData.question}`;
-        questionContainer.appendChild(questionText);
+
+        const flagButton = document.createElement('button');
+        flagButton.className = 'btn btn-warning btn-sm flag-btn-question';
+        flagButton.textContent = userAnswer.isFlagged ? 'Unflag' : 'Flag';
+        flagButton.addEventListener('click', toggleFlag);
+
+        questionHeader.appendChild(questionText);
+        questionHeader.appendChild(flagButton);
+        questionContainer.appendChild(questionHeader);
         
         // Add options
         const optionsContainer = document.createElement('div');
@@ -353,6 +364,13 @@ document.addEventListener('DOMContentLoaded', function() {
     function toggleFlag() {
         const userAnswer = userAnswers[currentAbsoluteIndex];
         userAnswer.isFlagged = !userAnswer.isFlagged;
+
+        // Update the button text in the question header
+        const flagButton = document.querySelector('.flag-btn-question');
+        if (flagButton) {
+            flagButton.textContent = userAnswer.isFlagged ? 'Unflag' : 'Flag';
+        }
+
         updateSidebarNavigation();
     }
     
@@ -402,32 +420,63 @@ document.addEventListener('DOMContentLoaded', function() {
         scoreValue.textContent = correct;
         totalQuestions.textContent = total;
         
-        // Generate review
         reviewContainer.innerHTML = '';
-        userAnswers.forEach((userAnswer, index) => {
-            const questionData = userAnswer.questionData;
-            
-            const reviewItem = document.createElement('div');
-            reviewItem.className = 'review-item';
-            
-            const status = userAnswer.isCorrect ? '✓ Correct' : '✗ Incorrect';
-            const statusClass = userAnswer.isCorrect ? 'correct' : 'incorrect';
-            const selectedOptionText = userAnswer.selectedOption !== null ? questionData.options[userAnswer.selectedOption] : 'No answer selected';
-            
-            // Find the original correct answer text before shuffling
-            const originalQuestion = quizData.sections.find(s => s.questions.some(q => q.id === questionData.id)).questions.find(q => q.id === questionData.id);
-            const originalCorrectOptionText = originalQuestion.options[originalQuestion.correctAnswer];
 
-            reviewItem.innerHTML = `
-                <p><strong>Question ${index + 1}:</strong> ${questionData.question}</p>
-                <p>Your answer: ${selectedOptionText}</p>
-                <p>Correct answer: ${originalCorrectOptionText}</p>
-                <p class="${statusClass}">${status}</p>
-                ${questionData.explanation ? `<p><em>Explanation: ${questionData.explanation}</em></p>` : ''}
-            `;
-            
-            reviewContainer.appendChild(reviewItem);
-        });
+        // Group answers by section
+        const answersBySection = userAnswers.reduce((acc, userAnswer) => {
+            const sectionName = userAnswer.questionData.sectionName;
+            if (!acc[sectionName]) {
+                acc[sectionName] = [];
+            }
+            acc[sectionName].push(userAnswer);
+            return acc;
+        }, {});
+
+        // Generate review for each section
+        for (const sectionName in answersBySection) {
+            const sectionAnswers = answersBySection[sectionName];
+
+            // Create section panel
+            const sectionPanel = document.createElement('div');
+            sectionPanel.className = 'review-section-panel card'; // Use card style
+
+            const sectionHeader = document.createElement('h3');
+            sectionHeader.className = 'review-section-header';
+            sectionHeader.textContent = sectionName;
+            sectionPanel.appendChild(sectionHeader);
+
+            sectionAnswers.forEach(userAnswer => {
+                const questionData = userAnswer.questionData;
+                const reviewItem = document.createElement('div');
+                reviewItem.className = 'review-item';
+                
+                // Add a border based on correctness
+                if (userAnswer.selectedOption !== null) {
+                    reviewItem.classList.add(userAnswer.isCorrect ? 'review-correct' : 'review-incorrect');
+                }
+
+                const status = userAnswer.isCorrect ? '✓ Correct' : '✗ Incorrect';
+                const statusClass = userAnswer.isCorrect ? 'correct' : 'incorrect';
+                const selectedOptionText = userAnswer.selectedOption !== null ? questionData.options[userAnswer.selectedOption] : 'No answer selected';
+                
+                const originalQuestion = quizData.sections.find(s => s.questions.some(q => q.id === questionData.id)).questions.find(q => q.id === questionData.id);
+                const originalCorrectOptionText = originalQuestion.options[originalQuestion.correctAnswer];
+
+                const questionIndex = randomizedQuestions.findIndex(q => q.id === questionData.id);
+
+                reviewItem.innerHTML = `
+                    <p><strong>Question ${questionIndex + 1}:</strong> ${questionData.question}</p>
+                    <p>Your answer: ${selectedOptionText}</p>
+                    <p>Correct answer: ${originalCorrectOptionText}</p>
+                    <p class="${statusClass}">${status}</p>
+                    ${questionData.explanation ? `<p class="explanation"><em>Explanation: ${questionData.explanation}</em></p>` : ''}
+                `;
+                
+                sectionPanel.appendChild(reviewItem);
+            });
+
+            reviewContainer.appendChild(sectionPanel);
+        }
         
         // Show results panel
         quizPanel.classList.add('hidden');
