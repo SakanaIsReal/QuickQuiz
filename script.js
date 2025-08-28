@@ -32,6 +32,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const fileImport = document.getElementById('file-import');
     const downloadJsonBtn = document.getElementById('download-json-btn');
     const copyPromptBtn = document.getElementById('copy-prompt-btn');
+    const showWrongAnswersBtn = document.getElementById('show-wrong-answers-btn');
 
     // Quiz state
     let quizData = null;
@@ -41,6 +42,7 @@ document.addEventListener('DOMContentLoaded', function() {
     let secondsElapsed = 0;
     let currentAbsoluteIndex = 0;
     let currentSeed = null;
+    let showingWrongAnswersOnly = false;
 
     // --- THEME SWITCHER LOGIC ---
     // Apply saved theme on load
@@ -498,7 +500,23 @@ Requirements:
         // Find the original correct answer text before shuffling
         const originalQuestion = quizData.sections.find(s => s.questions.some(q => q.id === questionData.id)).questions.find(q => q.id === questionData.id);
         const originalCorrectOptionText = originalQuestion.correctAnswer;
-        userAnswer.isCorrect = (questionData.options[optionIndex] === originalCorrectOptionText);
+
+        // Determine if the selected option is correct
+        let isCorrectAnswer = false;
+        if (Array.isArray(originalCorrectOptionText)) {
+            // If correctAnswer is an array (e.g., for multiple correct answers or old format)
+            isCorrectAnswer = originalCorrectOptionText.includes(questionData.options[optionIndex]);
+        } else {
+            // If correctAnswer is a string (new format)
+            isCorrectAnswer = (questionData.options[optionIndex] === originalCorrectOptionText);
+        }
+        userAnswer.isCorrect = isCorrectAnswer;
+
+        // console.log('--- selectOption Debug ---'); // Removed for cleaner output
+        // console.log('Selected option index:', optionIndex);
+        // console.log('User selected option text:', questionData.options[optionIndex]);
+        // console.log('Original correct option text (from quizData):', originalCorrectOptionText);
+        // console.log('Is correct (calculated):', userAnswer.isCorrect);
         
         const options = document.querySelectorAll('.option');
         options.forEach(option => option.classList.remove('selected'));
@@ -660,70 +678,82 @@ Requirements:
         scoreValue.textContent = correct;
         totalQuestions.textContent = total;
         
-        reviewContainer.innerHTML = '';
+        // Render all review items initially
+        renderReview(false); // Show all answers by default
 
-        // Group answers by section
-        const answersBySection = userAnswers.reduce((acc, userAnswer) => {
-            const sectionName = userAnswer.questionData.sectionName;
-            if (!acc[sectionName]) {
-                acc[sectionName] = [];
-            }
-            acc[sectionName].push(userAnswer);
-            return acc;
-        }, {});
+        // Reset the state of the showWrongAnswersBtn
+        showingWrongAnswersOnly = false;
+        showWrongAnswersBtn.textContent = 'Show Wrong Answers';
+        showWrongAnswersBtn.classList.remove('btn-primary'); // Remove active state color
+        showWrongAnswersBtn.classList.add('btn-secondary'); // Add default color
 
-        // Generate review for each section
-        for (const sectionName in answersBySection) {
-            const sectionAnswers = answersBySection[sectionName];
-
-            // Create section panel
-            const sectionPanel = document.createElement('div');
-            sectionPanel.className = 'review-section-panel card'; // Use card style
-
-            const sectionHeader = document.createElement('h3');
-            sectionHeader.className = 'review-section-header';
-            sectionHeader.textContent = sectionName;
-            sectionPanel.appendChild(sectionHeader);
-
-            sectionAnswers.forEach(userAnswer => {
-                const questionData = userAnswer.questionData;
-                const reviewItem = document.createElement('div');
-                reviewItem.className = 'review-item';
-                
-                // Add a border based on correctness
-                if (userAnswer.selectedOption !== null) {
-                    reviewItem.classList.add(userAnswer.isCorrect ? 'review-correct' : 'review-incorrect');
-                }
-
-                const status = userAnswer.isCorrect ? '✓ Correct' : '✗ Incorrect';
-                const statusClass = userAnswer.isCorrect ? 'correct' : 'incorrect';
-                const selectedOptionText = userAnswer.selectedOption !== null ? questionData.options[userAnswer.selectedOption] : 'No answer selected';
-                
-                const originalQuestion = quizData.sections.find(s => s.questions.some(q => q.id === questionData.id)).questions.find(q => q.id === questionData.id);
-                        const originalCorrectOptionText = originalQuestion.correctAnswer;
-
-                const questionIndex = randomizedQuestions.findIndex(q => q.id === questionData.id);
-
-                reviewItem.innerHTML = `
-                    <p><strong>Question ${questionIndex + 1}:</strong> ${questionData.question}</p>
-                    <p>Your answer: ${selectedOptionText}</p>
-                    <p>Correct answer: ${originalCorrectOptionText}</p>
-                    <p class="${statusClass}">${status}</p>
-                    ${questionData.explanation ? `<p class="explanation"><em>Explanation: ${questionData.explanation}</em></p>` : ''}
-                `;
-                
-                sectionPanel.appendChild(reviewItem);
-            });
-
-            reviewContainer.appendChild(sectionPanel);
-        }
-        
         // Show results panel
         confirmationPanel.classList.add('hidden');
         quizPanel.classList.add('hidden');
         resultsPanel.classList.remove('hidden');
         sidebar.classList.add('hidden');
         container.classList.add('sidebar-hidden');
+    }
+
+    // Function to render the review section with optional filtering
+    function renderReview(filterWrongOnly = false) {
+        reviewContainer.innerHTML = ''; // Clear existing review content
+
+        // Group answers by section
+        quizData.sections.forEach(section => {
+            const sectionName = section.sectionName;
+            let sectionAnswers = userAnswers.filter(answer => answer.questionData.sectionName === sectionName)
+                                              .sort((a, b) => a.questionData.id - b.questionData.id);
+
+            // Apply filter if requested
+            if (filterWrongOnly) {
+                sectionAnswers = sectionAnswers.filter(answer => !answer.isCorrect);
+            }
+
+            // Only render section if it has questions after filtering
+            if (sectionAnswers.length > 0) {
+                // Create section panel
+                const sectionPanel = document.createElement('div');
+                sectionPanel.className = 'review-section-panel card'; // Use card style
+
+                const sectionHeader = document.createElement('h3');
+                sectionHeader.className = 'review-section-header';
+                sectionHeader.textContent = sectionName;
+                sectionPanel.appendChild(sectionHeader);
+
+                sectionAnswers.forEach(userAnswer => {
+                    const questionData = userAnswer.questionData;
+                    const reviewItem = document.createElement('div');
+                    reviewItem.className = 'review-item';
+                    
+                    // Add a border based on correctness
+                    if (userAnswer.selectedOption !== null) {
+                        reviewItem.classList.add(userAnswer.isCorrect ? 'review-correct' : 'review-incorrect');
+                    }
+
+                    const status = userAnswer.isCorrect ? '✓ Correct' : '✗ Incorrect';
+                    const statusClass = userAnswer.isCorrect ? 'correct' : 'incorrect';
+                    const selectedOptionText = userAnswer.selectedOption !== null ? questionData.options[userAnswer.selectedOption] : 'No answer selected';
+                    
+                    const originalQuestion = quizData.sections.find(s => s.questions.some(q => q.id === questionData.id)).questions.find(q => q.id === questionData.id);
+                    const originalCorrectOptionText = originalQuestion.correctAnswer;
+
+                    const questionIndex = randomizedQuestions.findIndex(q => q.id === questionData.id);
+
+                    reviewItem.innerHTML = `
+                        <p><strong>Question ${questionIndex + 1}:</strong> ${questionData.question}</p>
+                        <p>Your answer: ${selectedOptionText}</p>
+                        <p>Correct answer: ${originalCorrectOptionText}</p>
+                        <p class="${statusClass}">${status}</p>
+                        ${questionData.explanation ? `<p class="explanation"><em>Explanation: ${questionData.explanation}</em></p>` : ''}
+                    `;
+                    
+                    sectionPanel.appendChild(reviewItem);
+                });
+
+                reviewContainer.appendChild(sectionPanel);
+            }
+        });
     }
     
     // Restart quiz
@@ -738,4 +768,19 @@ Requirements:
         sidebar.classList.add('hidden');
         container.classList.add('sidebar-hidden');
     }
+
+    showWrongAnswersBtn.addEventListener('click', () => {
+        showingWrongAnswersOnly = !showingWrongAnswersOnly;
+        if (showingWrongAnswersOnly) {
+            renderReview(true); // Show only wrong answers
+            showWrongAnswersBtn.textContent = 'Show All Answers';
+            showWrongAnswersBtn.classList.remove('btn-secondary');
+            showWrongAnswersBtn.classList.add('btn-primary');
+        } else {
+            renderReview(false); // Show all answers
+            showWrongAnswersBtn.textContent = 'Show Wrong Answers';
+            showWrongAnswersBtn.classList.remove('btn-primary');
+            showWrongAnswersBtn.classList.add('btn-secondary');
+        }
+    });
 });
