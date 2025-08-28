@@ -620,3 +620,22 @@ pre {
     white-space: pre-wrap;
     word-wrap: break-word;
 }
+
+@keyframes copiedFade {
+    0% {
+        background-color: var(--success);
+        transform: scale(1);
+    }
+    50% {
+        background-color: var(--success);
+        transform: scale(1.02);
+    }
+    100% {
+        background-color: var(--gray); /* Revert to original secondary color */
+        transform: scale(1);
+    }
+}
+
+.btn.copied-animation {
+    animation: copiedFade 0.5s ease-in-out forwards;
+}

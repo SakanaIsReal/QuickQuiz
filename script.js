@@ -190,10 +190,14 @@ Requirements:
             const successful = document.execCommand('copy');
             const msg = successful ? 'successful' : 'unsuccessful';
             console.log('Fallback: Copying text command was ' + msg);
-            alert('Prompt copied to clipboard!');
+            // Animation on success
+            copyPromptBtn.classList.add('copied-animation');
+            setTimeout(() => {
+                copyPromptBtn.classList.remove('copied-animation');
+            }, 500); // Animation duration
         } catch (err) {
             console.error('Fallback: Oops, unable to copy', err);
-            alert('Failed to copy prompt. Please copy manually.');
+            // No animation on failure, or a different one if desired
         }
 
         document.body.removeChild(textArea);
@@ -283,7 +287,11 @@ Requirements:
         if (promptToCopy) {
             if (navigator.clipboard && navigator.clipboard.writeText) {
                 navigator.clipboard.writeText(promptToCopy).then(() => {
-                    alert('Prompt copied to clipboard!');
+                    // Animation on success
+                    copyPromptBtn.classList.add('copied-animation');
+                    setTimeout(() => {
+                        copyPromptBtn.classList.remove('copied-animation');
+                    }, 500); // Animation duration
                 }).catch(err => {
                     console.error('Failed to copy prompt using Clipboard API: ', err);
                     fallbackCopyTextToClipboard(promptToCopy);
