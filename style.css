@@ -168,6 +168,15 @@ h1 {
     color: white;
 }
 
+.btn-secondary {
+    background-color: var(--gray);
+    color: white;
+}
+
+.btn-secondary:hover {
+    background-color: var(--dark);
+}
+
 .btn:disabled {
     background-color: var(--gray);
     cursor: not-allowed;
@@ -182,6 +191,10 @@ h1 {
     display: flex;
     justify-content: flex-end;
     margin-top: 20px;
+}
+
+#download-json-btn {
+    margin-right: 10px;
 }
 
 .form-group input {

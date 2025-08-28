@@ -23,13 +23,14 @@ document.addEventListener('DOMContentLoaded', function() {
     const seedValueDisplay = document.getElementById('seed-value');
     const sidebar = document.getElementById('sidebar');
     const questionList = document.getElementById('question-list');
-    const flagBtn = document.getElementById('flag-btn');
     const confirmationPanel = document.getElementById('confirmation-panel');
     const confirmationSummary = document.getElementById('confirmation-summary');
     const confirmSubmissionBtn = document.getElementById('confirm-submission-btn');
     const cancelSubmissionBtn = document.getElementById('cancel-submission-btn');
     const reviewAndSubmitBtn = document.getElementById('review-and-submit-btn');
     const themeSwitcher = document.getElementById('theme-switcher');
+    const fileImport = document.getElementById('file-import');
+    const downloadJsonBtn = document.getElementById('download-json-btn');
 
     // Quiz state
     let quizData = null;
@@ -144,7 +145,6 @@ document.addEventListener('DOMContentLoaded', function() {
     submitBtn.addEventListener('click', showConfirmationPage);
     restartBtn.addEventListener('click', restartQuiz);
     timerToggle.addEventListener('change', toggleTimer);
-    
     confirmSubmissionBtn.addEventListener('click', submitQuiz);
     cancelSubmissionBtn.addEventListener('click', () => {
         confirmationPanel.classList.add('hidden');
@@ -165,6 +165,52 @@ document.addEventListener('DOMContentLoaded', function() {
 
             goToQuestion(questionIndex);
         }
+    });
+    fileImport.addEventListener('change', (event) => {
+        const file = event.target.files[0];
+        if (!file) {
+            return;
+        }
+        const reader = new FileReader();
+        reader.onload = (e) => {
+            jsonInput.value = e.target.result;
+        };
+        reader.readAsText(file);
+    });
+    downloadJsonBtn.addEventListener('click', () => {
+        const jsonString = jsonInput.value;
+        if (!jsonString.trim()) {
+            alert('Textarea is empty. There is nothing to download.');
+            return;
+        }
+
+        let quizTitle = 'custom_quiz';
+        try {
+            const parsedJson = JSON.parse(jsonString);
+            if (parsedJson && parsedJson.quizTitle) {
+                quizTitle = parsedJson.quizTitle.replace(/[^a-z0-9]/gi, '_').toLowerCase();
+            }
+        } catch (e) {
+            console.warn('Could not parse JSON to get quiz title for filename.', e);
+        }
+
+        const today = new Date();
+        const year = today.getFullYear();
+        const month = String(today.getMonth() + 1).padStart(2, '0');
+        const day = String(today.getDate()).padStart(2, '0');
+        const formattedDate = `${year}-${month}-${day}`;
+
+        const fileName = `${formattedDate}_${quizTitle}.json`;
+
+        const blob = new Blob([jsonString], { type: 'application/json' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = fileName;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
     });
     
     // Import quiz from JSON and start

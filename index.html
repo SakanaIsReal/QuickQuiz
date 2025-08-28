@@ -50,10 +50,15 @@
                     <div id="json-error" class="error-message hidden"></div>
                 </div>
                 <div class="form-group">
+                    <label for="file-import">Or upload a file:</label>
+                    <input type="file" id="file-import" accept=".json">
+                </div>
+                <div class="form-group">
                     <label for="seed-input">Quiz Seed (optional):</label>
                     <input type="text" id="seed-input" placeholder="Enter a number or text">
                 </div>
                 <div class="form-actions-right">
+                    <button id="download-json-btn" class="btn btn-secondary">Download JSON</button>
                     <button id="import-btn" class="btn btn-primary">Start Quiz</button>
                 </div>
             </div>
