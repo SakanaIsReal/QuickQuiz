@@ -27,6 +27,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const confirmationSummary = document.getElementById('confirmation-summary');
     const confirmSubmissionBtn = document.getElementById('confirm-submission-btn');
     const cancelSubmissionBtn = document.getElementById('cancel-submission-btn');
+    const reviewAndSubmitBtn = document.getElementById('review-and-submit-btn');
 
     // Quiz state
     let quizData = null;
@@ -127,6 +128,7 @@ document.addEventListener('DOMContentLoaded', function() {
         quizPanel.classList.remove('hidden');
         sidebar.classList.remove('hidden');
     });
+    reviewAndSubmitBtn.addEventListener('click', showConfirmationPage);
     confirmationSummary.addEventListener('click', (event) => {
         const summaryItem = event.target.closest('.summary-item');
         if (summaryItem && summaryItem.dataset.questionIndex) {

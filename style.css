@@ -399,6 +399,20 @@ input:checked + .toggle-slider:before {
     background-color: var(--warning);
 }
 
+.review-submit-link {
+    margin-top: 20px;
+    text-align: center;
+    font-weight: bold;
+    color: var(--primary);
+    cursor: pointer;
+    text-decoration: underline;
+    transition: color 0.2s ease;
+}
+
+.review-submit-link:hover {
+    color: var(--secondary);
+}
+
 #confirmation-panel h2 {
     text-align: center;
     margin-bottom: 10px;
@@ -413,6 +427,7 @@ input:checked + .toggle-slider:before {
     width: 100%;
     border-collapse: collapse;
     margin-bottom: 20px;
+    table-layout: fixed;
 }
 
 .summary-table td {
