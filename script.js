@@ -31,6 +31,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const themeSwitcher = document.getElementById('theme-switcher');
     const fileImport = document.getElementById('file-import');
     const downloadJsonBtn = document.getElementById('download-json-btn');
+    const copyPromptBtn = document.getElementById('copy-prompt-btn');
 
     // Quiz state
     let quizData = null;
@@ -135,6 +136,69 @@ document.addEventListener('DOMContentLoaded', function() {
         ]
     }`;
     
+    const aiQuizPrompt = `Create a comprehensive quiz based on the provided material. The quiz should deeply test understanding, covering the most important concepts and knowledge points. Generate 30 well-structured multiple-choice questions** divided into logical sections.
+
+Format the output in the following JSON structure:
+
+<json>
+{
+  "quizTitle": "Your Quiz Title",
+  "description": "Quiz description",
+  "sections": [
+    {
+      "sectionName": "Section One",
+      "instructions": "Section instructions",
+      "questions": [
+        {
+          "id": 1,
+          "question": "Question text?",
+          "options": ["Option A", "Option B", "Option C", "Option D"],
+          "correctAnswer": "Option D",
+          "explanation": "Explanation for answer"
+        }
+      ] 
+    }
+  ]
+}
+</json>
+
+Requirements:
+
+1. Include exactly **30 questions** in total.
+2. Divide the questions into **themed sections** (e.g., fundamentals, advanced concepts, applications).
+3. Each question must have **four options**.
+4. The "correctAnswer" field must have one string answer that match one of the options
+5. Provide a **short but clear explanation** for every correct answer.
+6. Ensure the questions range from **basic to deep knowledge** to thoroughly test understanding.
+`;
+    
+    // Fallback for copying text to clipboard
+    function fallbackCopyTextToClipboard(text) {
+        const textArea = document.createElement("textarea");
+        textArea.value = text;
+        
+        // Avoid scrolling to bottom
+        textArea.style.top = "0";
+        textArea.style.left = "0";
+        textArea.style.position = "fixed";
+
+        document.body.appendChild(textArea);
+        textArea.focus();
+        textArea.select();
+
+        try {
+            const successful = document.execCommand('copy');
+            const msg = successful ? 'successful' : 'unsuccessful';
+            console.log('Fallback: Copying text command was ' + msg);
+            alert('Prompt copied to clipboard!');
+        } catch (err) {
+            console.error('Fallback: Oops, unable to copy', err);
+            alert('Failed to copy prompt. Please copy manually.');
+        }
+
+        document.body.removeChild(textArea);
+    }
+
     // Preload sample JSON
     jsonInput.value = sampleQuizJSON;
     
@@ -211,6 +275,23 @@ document.addEventListener('DOMContentLoaded', function() {
         a.click();
         document.body.removeChild(a);
         URL.revokeObjectURL(url);
+    });
+
+    copyPromptBtn.addEventListener('click', () => {
+        let promptToCopy = aiQuizPrompt;
+
+        if (promptToCopy) {
+            if (navigator.clipboard && navigator.clipboard.writeText) {
+                navigator.clipboard.writeText(promptToCopy).then(() => {
+                    alert('Prompt copied to clipboard!');
+                }).catch(err => {
+                    console.error('Failed to copy prompt using Clipboard API: ', err);
+                    fallbackCopyTextToClipboard(promptToCopy);
+                });
+            } else {
+                fallbackCopyTextToClipboard(promptToCopy);
+            }
+        }
     });
     
     // Import quiz from JSON and start
@@ -611,17 +692,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 const selectedOptionText = userAnswer.selectedOption !== null ? questionData.options[userAnswer.selectedOption] : 'No answer selected';
                 
                 const originalQuestion = quizData.sections.find(s => s.questions.some(q => q.id === questionData.id)).questions.find(q => q.id === questionData.id);
-                const originalCorrectOptionText = originalQuestion.correctAnswer;
-
-                const questionIndex = randomizedQuestions.findIndex(q => q.id === questionData.id);
-
-                reviewItem.innerHTML = `
-                    <p><strong>Question ${questionIndex + 1}:</strong> ${questionData.question}</p>
-                    <p>Your answer: ${selectedOptionText}</p>
-                    <p>Correct answer: ${originalCorrectOptionText}</p>
-                    <p class="${statusClass}">${status}</p>
-                    ${questionData.explanation ? `<p class="explanation"><em>Explanation: ${questionData.explanation}</em></p>` : ''}
-                `;
+                        userAnswer.isCorrect = (questionData.options[optionIndex] === originalCorrectOptionText);
                 
                 sectionPanel.appendChild(reviewItem);
             });
