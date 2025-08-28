@@ -34,6 +34,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const copyPromptBtn = document.getElementById('copy-prompt-btn');
     const showWrongAnswersBtn = document.getElementById('show-wrong-answers-btn');
     const retryWrongAnswersBtn = document.getElementById('retry-wrong-answers-btn');
+    const copyWrongAnswersPromptBtn = document.getElementById('copy-wrong-answers-prompt-btn');
 
     // Quiz state
     let quizData = null;
@@ -218,6 +219,7 @@ Requirements:
     timerToggle.addEventListener('change', toggleTimer);
     confirmSubmissionBtn.addEventListener('click', submitQuiz);
     retryWrongAnswersBtn.addEventListener('click', retryWrongAnswers);
+    copyWrongAnswersPromptBtn.addEventListener('click', copyWrongAnswersPrompt);
     cancelSubmissionBtn.addEventListener('click', () => {
         confirmationPanel.classList.add('hidden');
         quizPanel.classList.remove('hidden');
@@ -700,8 +702,10 @@ Requirements:
         const wrongAnswers = userAnswers.filter(answer => !answer.isCorrect);
         if (wrongAnswers.length === 0) {
             retryWrongAnswersBtn.classList.add('hidden');
+            copyWrongAnswersPromptBtn.classList.add('hidden');
         } else {
             retryWrongAnswersBtn.classList.remove('hidden');
+            copyWrongAnswersPromptBtn.classList.remove('hidden');
         }
     }
 
@@ -828,6 +832,42 @@ Requirements:
         quizPanel.classList.remove('hidden');
         sidebar.classList.remove('hidden');
         container.classList.remove('sidebar-hidden');
+    }
+
+    // Copy prompt for wrong answers
+    function copyWrongAnswersPrompt() {
+        const wrongAnswers = userAnswers.filter(answer => !answer.isCorrect);
+
+        if (wrongAnswers.length === 0) {
+            alert('No wrong answers to generate a prompt from. Great job!');
+            return;
+        }
+
+        let promptContent = `Create a comprehensive quiz based on the following topics/questions that I answered incorrectly. The quiz should deeply test understanding, covering the most important concepts and knowledge points related to these areas. Generate 30 well-structured multiple-choice questions divided into logical sections.\n\nHere are the questions I got wrong and their correct answers/explanations:\n\n`;
+
+        wrongAnswers.forEach((answer, index) => {
+            promptContent += `Question ${index + 1}:\n`;
+            promptContent += `  Question: ${answer.questionData.question}\n`;
+            promptContent += `  Correct Answer: ${answer.questionData.correctAnswer}\n`;
+            if (answer.questionData.explanation) {
+                promptContent += `  Explanation: ${answer.questionData.explanation}\n`;
+            }
+            promptContent += `\n`;
+        });
+
+        promptContent += `Format the output in the following JSON structure:\n\n<json>\n{\n  "quizTitle": "Your Quiz Title",\n  "description": "Quiz description",\n  "sections": [\n    {\n      "sectionName": "Section One",\n      "instructions": "Section instructions",\n      "questions": [\n        {\n          "id": 1,\n          "question": "Question text?",\n          "options": ["Option A", "Option B", "Option C", "Option D"],
+          "correctAnswer": "Option D",\n          "explanation": "Explanation for answer"\n        }\n      ] \n    }\n  ]\n}\n</json>\n\nRequirements:\n\n1. Include exactly **30 questions** in total.\n2. Divide the questions into **themed sections** (e.g., fundamentals, advanced concepts, applications).\n3. Each question must have **four options**.\n4. The "correctAnswer" field must have one string answer that match one of the options\n5. Provide a **short but clear explanation** for every correct answer.\n6. Ensure the questions range from **basic to deep knowledge** to thoroughly test understanding.\n`;
+
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+            navigator.clipboard.writeText(promptContent).then(() => {
+                alert('Prompt copied to clipboard!');
+            }).catch(err => {
+                console.error('Failed to copy prompt using Clipboard API: ', err);
+                fallbackCopyTextToClipboard(promptContent);
+            });
+        } else {
+            fallbackCopyTextToClipboard(promptContent);
+        }
     }
 
     showWrongAnswersBtn.addEventListener('click', () => {

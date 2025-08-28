@@ -672,3 +672,9 @@ pre {
 #retry-wrong-answers-btn {
     margin-left: auto;
 }
+
+.button-group {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 20px; /* Add some space below the button group */
+}
