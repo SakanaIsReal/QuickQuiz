@@ -23,6 +23,10 @@ document.addEventListener('DOMContentLoaded', function() {
     const sidebar = document.getElementById('sidebar');
     const questionList = document.getElementById('question-list');
     const flagBtn = document.getElementById('flag-btn');
+    const confirmationPanel = document.getElementById('confirmation-panel');
+    const confirmationSummary = document.getElementById('confirmation-summary');
+    const confirmSubmissionBtn = document.getElementById('confirm-submission-btn');
+    const cancelSubmissionBtn = document.getElementById('cancel-submission-btn');
 
     // Quiz state
     let quizData = null;
@@ -113,10 +117,16 @@ document.addEventListener('DOMContentLoaded', function() {
     importBtn.addEventListener('click', importQuiz);
     prevBtn.addEventListener('click', showPreviousQuestion);
     nextBtn.addEventListener('click', showNextQuestion);
-    submitBtn.addEventListener('click', submitQuiz);
+    submitBtn.addEventListener('click', showConfirmationPage);
     restartBtn.addEventListener('click', restartQuiz);
     timerToggle.addEventListener('change', toggleTimer);
     flagBtn.addEventListener('click', toggleFlag);
+    confirmSubmissionBtn.addEventListener('click', submitQuiz);
+    cancelSubmissionBtn.addEventListener('click', () => {
+        confirmationPanel.classList.add('hidden');
+        quizPanel.classList.remove('hidden');
+        sidebar.classList.remove('hidden');
+    });
     
     // Import quiz from JSON and start
     function importQuiz() {
@@ -407,6 +417,59 @@ document.addEventListener('DOMContentLoaded', function() {
         const seconds = secondsElapsed % 60;
         timerDisplay.textContent = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
     }
+
+    // Show confirmation page before submitting
+    function showConfirmationPage() {
+        // Hide quiz panel and sidebar
+        quizPanel.classList.add('hidden');
+        sidebar.classList.add('hidden');
+
+        // Generate summary content
+        confirmationSummary.innerHTML = '';
+        const summaryTable = document.createElement('table');
+        summaryTable.className = 'summary-table';
+
+        let tableBody = '<tbody>';
+        const numColumns = 5; // Adjust number of columns for the grid
+        const numRows = Math.ceil(userAnswers.length / numColumns);
+
+        for (let i = 0; i < numRows; i++) {
+            tableBody += '<tr>';
+            for (let j = 0; j < numColumns; j++) {
+                const questionIndex = i * numColumns + j;
+                if (questionIndex < userAnswers.length) {
+                    const userAnswer = userAnswers[questionIndex];
+                    let status = 'Unanswered';
+                    let statusClass = 'status-unanswered';
+                    if (userAnswer.isFlagged) {
+                        status = 'Flagged';
+                        statusClass = 'status-flagged';
+                    } else if (userAnswer.selectedOption !== null) {
+                        status = 'Answered';
+                        statusClass = 'status-answered';
+                    }
+                    tableBody += `
+                        <td>
+                            <div class="summary-item ${statusClass}">
+                                <span class="summary-q-num">${questionIndex + 1}</span>
+                                <span class="summary-q-status">${status}</span>
+                            </div>
+                        </td>
+                    `;
+                } else {
+                    tableBody += '<td></td>'; // Empty cell for grid alignment
+                }
+            }
+            tableBody += '</tr>';
+        }
+        tableBody += '</tbody>';
+
+        summaryTable.innerHTML = tableBody;
+        confirmationSummary.appendChild(summaryTable);
+
+        // Show confirmation panel
+        confirmationPanel.classList.remove('hidden');
+    }
     
     // Submit quiz
     function submitQuiz() {
@@ -479,6 +542,7 @@ document.addEventListener('DOMContentLoaded', function() {
         }
         
         // Show results panel
+        confirmationPanel.classList.add('hidden');
         quizPanel.classList.add('hidden');
         resultsPanel.classList.remove('hidden');
         sidebar.classList.add('hidden');
