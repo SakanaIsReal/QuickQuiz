@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quick Quiz - Exam Preparation</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <main>
+            <header>
+                <h1>Quick Quiz</h1>
+                <p class="subtitle">Exam Preparation Tool</p>
+            </header>
+            
+            <div class="card" id="import-panel">
+                <h2>Import Quiz</h2>
+                <div class="instructions">
+                    <p>Import your quiz in JSON format. The JSON should have the following structure:</p>
+                    <pre>{
+  "quizTitle": "Your Quiz Title",
+  "description": "Quiz description",
+  "sections": [
+    {
+      "sectionName": "Section One",
+      "instructions": "Section instructions",
+      "questions": [
+        {
+          "id": 1,
+          "question": "Question text?",
+          "options": ["Option A", "Option B", "Option C", "Option D"],
+          "correctAnswer": 0,
+          "explanation": "Explanation for answer"
+        }
+      ]
+    }
+  ]
+}</pre>
+                </div>
+                <div class="form-group">
+                    <label for="json-input">Paste your JSON here:</label>
+                    <textarea id="json-input" placeholder="Paste your quiz JSON here..."></textarea>
+                    <div id="json-error" class="error-message hidden"></div>
+                </div>
+                <div class="form-group">
+                    <label for="seed-input">Quiz Seed (optional):</label>
+                    <input type="text" id="seed-input" placeholder="Enter a number or text">
+                </div>
+                <button id="import-btn" class="btn btn-primary">Start Quiz</button>
+            </div>
+            
+            <div class="card hidden" id="quiz-panel">
+                <div class="quiz-controls">
+                    <h2 id="quiz-title">Quiz Title</h2>
+                    <div class="quiz-info">
+                        <div id="seed-display" class="hidden"><strong>Seed:</strong> <span id="seed-value"></span></div>
+                        <div class="timer-container">
+                            <span>Timer:</span>
+                            <label class="toggle-switch">
+                                <input type="checkbox" id="timer-toggle">
+                                <span class="toggle-slider"></span>
+                            </label>
+                            <div class="timer" id="timer">00:00</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div id="quiz-container">
+                    <!-- Quiz content will be loaded here -->
+                </div>
+                
+                <div class="navigation">
+                    <button id="prev-btn" class="btn btn-primary hidden" disabled>Previous</button>
+                    <button id="flag-btn" class="btn btn-warning">Flag Question</button>
+                    <button id="next-btn" class="btn btn-primary">Next</button>
+                    <button id="submit-btn" class="btn btn-success hidden">Submit Quiz</button>
+                </div>
+            </div>
+            
+            <div class="card hidden" id="results-panel">
+                <h2>Quiz Results</h2>
+                <div class="score">Your score: <span id="score-value">0</span>/<span id="total-questions">0</span></div>
+                <div id="review-container">
+                    <!-- Review content will be loaded here -->
+                </div>
+                <button id="restart-btn" class="btn btn-primary">Take Another Quiz</button>
+            </div>
+        </main>
+        
+        <aside class="sidebar hidden" id="sidebar">
+            <h3>Questions</h3>
+            <div id="question-list" class="question-list">
+                <!-- Question navigation buttons will be loaded here -->
+            </div>
+        </aside>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>
