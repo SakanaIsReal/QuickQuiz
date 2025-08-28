@@ -379,6 +379,7 @@ document.addEventListener('DOMContentLoaded', function() {
         const isLastQuestion = currentAbsoluteIndex === randomizedQuestions.length - 1;
         
         prevBtn.classList.toggle('hidden', isFirstQuestion);
+        prevBtn.disabled = isFirstQuestion;
         nextBtn.classList.toggle('hidden', isLastQuestion);
         submitBtn.classList.toggle('hidden', !isLastQuestion);
 
