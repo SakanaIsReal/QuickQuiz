@@ -144,7 +144,7 @@ document.addEventListener('DOMContentLoaded', function() {
     submitBtn.addEventListener('click', showConfirmationPage);
     restartBtn.addEventListener('click', restartQuiz);
     timerToggle.addEventListener('change', toggleTimer);
-    flagBtn.addEventListener('click', toggleFlag);
+    
     confirmSubmissionBtn.addEventListener('click', submitQuiz);
     cancelSubmissionBtn.addEventListener('click', () => {
         confirmationPanel.classList.add('hidden');

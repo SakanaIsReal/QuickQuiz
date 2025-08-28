@@ -53,7 +53,9 @@
                     <label for="seed-input">Quiz Seed (optional):</label>
                     <input type="text" id="seed-input" placeholder="Enter a number or text">
                 </div>
-                <button id="import-btn" class="btn btn-primary">Start Quiz</button>
+                <div class="form-actions-right">
+                    <button id="import-btn" class="btn btn-primary">Start Quiz</button>
+                </div>
             </div>
             
             <div class="card hidden" id="quiz-panel">
@@ -77,10 +79,15 @@
                 </div>
                 
                 <div class="navigation">
-                    <button id="prev-btn" class="btn btn-primary hidden" disabled>Previous</button>
-                    <button id="flag-btn" class="btn btn-warning hidden">Flag Question</button>
-                    <button id="next-btn" class="btn btn-primary">Next</button>
-                    <button id="submit-btn" class="btn btn-success hidden">Submit Quiz</button>
+                    <div class="nav-left">
+                        <button id="prev-btn" class="btn btn-primary hidden" disabled>Previous</button>
+                    </div>
+                    <div class="nav-center">
+                    </div>
+                    <div class="nav-right">
+                        <button id="next-btn" class="btn btn-primary">Next</button>
+                        <button id="submit-btn" class="btn btn-success hidden">Submit Quiz</button>
+                    </div>
                 </div>
             </div>
 

@@ -178,6 +178,12 @@ h1 {
     margin-bottom: 20px;
 }
 
+.form-actions-right {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 20px;
+}
+
 .form-group input {
     padding: 10px;
     border: 1px solid var(--border-color);
@@ -340,6 +346,20 @@ input:checked + .toggle-slider:before {
     justify-content: space-between;
     margin-top: 20px;
     align-items: center;
+}
+
+.nav-left, .nav-center, .nav-right {
+    display: flex;
+    gap: 10px;
+    flex: 1;
+}
+
+.nav-center {
+    justify-content: center;
+}
+
+.nav-right {
+    justify-content: flex-end;
 }
 
 .results-container {
