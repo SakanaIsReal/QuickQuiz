@@ -700,7 +700,17 @@ Requirements:
                 const selectedOptionText = userAnswer.selectedOption !== null ? questionData.options[userAnswer.selectedOption] : 'No answer selected';
                 
                 const originalQuestion = quizData.sections.find(s => s.questions.some(q => q.id === questionData.id)).questions.find(q => q.id === questionData.id);
-                        userAnswer.isCorrect = (questionData.options[optionIndex] === originalCorrectOptionText);
+                        const originalCorrectOptionText = originalQuestion.correctAnswer;
+
+                const questionIndex = randomizedQuestions.findIndex(q => q.id === questionData.id);
+
+                reviewItem.innerHTML = `
+                    <p><strong>Question ${questionIndex + 1}:</strong> ${questionData.question}</p>
+                    <p>Your answer: ${selectedOptionText}</p>
+                    <p>Correct answer: ${originalCorrectOptionText}</p>
+                    <p class="${statusClass}">${status}</p>
+                    ${questionData.explanation ? `<p class="explanation"><em>Explanation: ${questionData.explanation}</em></p>` : ''}
+                `;
                 
                 sectionPanel.appendChild(reviewItem);
             });
