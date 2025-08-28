@@ -1,5 +1,6 @@
 document.addEventListener('DOMContentLoaded', function() {
     // DOM elements
+    const container = document.querySelector('.container');
     const jsonInput = document.getElementById('json-input');
     const importBtn = document.getElementById('import-btn');
     const jsonError = document.getElementById('json-error');
@@ -56,6 +57,9 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
     // --- END THEME SWITCHER LOGIC ---
+
+    // Set initial layout
+    container.classList.add('sidebar-hidden');
 
     // Simple pseudo-random number generator (PRNG)
     const prng = (seed) => {
@@ -146,6 +150,7 @@ document.addEventListener('DOMContentLoaded', function() {
         confirmationPanel.classList.add('hidden');
         quizPanel.classList.remove('hidden');
         sidebar.classList.remove('hidden');
+        container.classList.remove('sidebar-hidden');
     });
     reviewAndSubmitBtn.addEventListener('click', showConfirmationPage);
     confirmationSummary.addEventListener('click', (event) => {
@@ -156,6 +161,7 @@ document.addEventListener('DOMContentLoaded', function() {
             confirmationPanel.classList.add('hidden');
             quizPanel.classList.remove('hidden');
             sidebar.classList.remove('hidden');
+            container.classList.remove('sidebar-hidden');
 
             goToQuestion(questionIndex);
         }
@@ -220,6 +226,7 @@ document.addEventListener('DOMContentLoaded', function() {
             importPanel.classList.add('hidden');
             quizPanel.classList.remove('hidden');
             sidebar.classList.remove('hidden');
+            container.classList.remove('sidebar-hidden');
 
             // Create sidebar navigation
             createSidebarNavigation();
@@ -456,6 +463,7 @@ document.addEventListener('DOMContentLoaded', function() {
         // Hide quiz panel and sidebar
         quizPanel.classList.add('hidden');
         sidebar.classList.add('hidden');
+        container.classList.add('sidebar-hidden');
 
         // Generate summary content
         confirmationSummary.innerHTML = '';
@@ -579,6 +587,7 @@ document.addEventListener('DOMContentLoaded', function() {
         quizPanel.classList.add('hidden');
         resultsPanel.classList.remove('hidden');
         sidebar.classList.add('hidden');
+        container.classList.add('sidebar-hidden');
     }
     
     // Restart quiz
@@ -590,5 +599,7 @@ document.addEventListener('DOMContentLoaded', function() {
         stopTimer();
         timerToggle.checked = false;
         seedInput.value = '';
+        sidebar.classList.add('hidden');
+        container.classList.add('sidebar-hidden');
     }
 });

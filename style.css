@@ -85,9 +85,18 @@ body {
     gap: 20px;
 }
 
+.container.sidebar-hidden {
+    justify-content: center;
+}
+
 main {
     width: calc(100% - 270px);
     flex-shrink: 0;
+}
+
+.container.sidebar-hidden main {
+    width: 100%;
+    max-width: 930px;
 }
 
 header {
@@ -500,7 +509,7 @@ input:checked + .toggle-slider:before {
 }
 
 .summary-table td {
-    border: 1px solid var(--border-color);
+    border: none;
     padding: 5px;
     text-align: center;
     vertical-align: top;
