@@ -28,6 +28,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const confirmSubmissionBtn = document.getElementById('confirm-submission-btn');
     const cancelSubmissionBtn = document.getElementById('cancel-submission-btn');
     const reviewAndSubmitBtn = document.getElementById('review-and-submit-btn');
+    const themeSwitcher = document.getElementById('theme-switcher');
 
     // Quiz state
     let quizData = null;
@@ -37,6 +38,24 @@ document.addEventListener('DOMContentLoaded', function() {
     let secondsElapsed = 0;
     let currentAbsoluteIndex = 0;
     let currentSeed = null;
+
+    // --- THEME SWITCHER LOGIC ---
+    // Apply saved theme on load
+    const savedTheme = localStorage.getItem('theme');
+    if (savedTheme === 'dark') {
+        document.body.classList.add('dark-mode');
+        themeSwitcher.checked = true;
+    }
+
+    themeSwitcher.addEventListener('change', () => {
+        document.body.classList.toggle('dark-mode');
+        if (document.body.classList.contains('dark-mode')) {
+            localStorage.setItem('theme', 'dark');
+        } else {
+            localStorage.setItem('theme', 'light');
+        }
+    });
+    // --- END THEME SWITCHER LOGIC ---
 
     // Simple pseudo-random number generator (PRNG)
     const prng = (seed) => {

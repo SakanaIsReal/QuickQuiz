@@ -7,6 +7,59 @@
     --light: #f8f9fa;
     --dark: #212529;
     --gray: #6c757d;
+
+    --bg-color: #f5f7fb;
+    --text-color: #212529;
+    --card-bg-color: white;
+    --border-color: #ddd;
+    --header-bg: linear-gradient(135deg, var(--primary), var(--secondary));
+    --header-text-color: white;
+    --option-bg-color: white;
+    --option-hover-bg-color: #f0f5ff;
+    --option-selected-bg-color: #e1f5fe;
+    --option-selected-border-color: var(--success);
+    --toggle-bg-color: #ccc;
+    --instructions-bg-color: #e8f5e9;
+    --explanation-bg-color: #e9ecef;
+    --pre-bg-color: #f4f4f4;
+    --qlist-item-bg-color: #f0f0f0;
+    --qlist-item-answered-bg-color: #28a745;
+    --qlist-item-flagged-bg-color: #ffc107;
+    --qlist-item-active-bg-color: var(--primary);
+    --qlist-item-answered-active-bg-color: #28a745;
+    --qlist-item-flagged-active-bg-color: var(--warning);
+}
+
+body.dark-mode {
+    --primary: #4361ee;
+    --secondary: #7b2cbf;
+    --success: #00b4d8;
+    --danger: #f72585;
+    --warning: #f8961e;
+    --light: #f8f9fa;
+    --dark: #212529;
+    --gray: #6c757d;
+
+    --bg-color: #121212;
+    --text-color: #e0e0e0;
+    --card-bg-color: #1e1e1e;
+    --border-color: #444;
+    --header-bg: #1e1e1e;
+    --header-text-color: #e0e0e0;
+    --option-bg-color: #2c2c2c;
+    --option-hover-bg-color: #3c3c3c;
+    --option-selected-bg-color: #005f73;
+    --option-selected-border-color: var(--success);
+    --toggle-bg-color: #555;
+    --instructions-bg-color: #2c3e50;
+    --explanation-bg-color: #2c2c2c;
+    --pre-bg-color: #2c2c2c;
+    --qlist-item-bg-color: #444;
+    --qlist-item-answered-bg-color: #28a745;
+    --qlist-item-flagged-bg-color: #ffc107;
+    --qlist-item-active-bg-color: var(--primary);
+    --qlist-item-answered-active-bg-color: #28a745;
+    --qlist-item-flagged-active-bg-color: var(--warning);
 }
 
 * {
@@ -17,11 +70,12 @@
 }
 
 body {
-    background-color: #f5f7fb;
-    color: var(--dark);
+    background-color: var(--bg-color);
+    color: var(--text-color);
     line-height: 1.6;
     min-height: 100vh;
     padding: 20px;
+    transition: background-color 0.3s, color 0.3s;
 }
 
 .container {
@@ -40,10 +94,17 @@ header {
     text-align: center;
     margin-bottom: 30px;
     padding: 20px;
-    background: linear-gradient(135deg, var(--primary), var(--secondary));
-    color: white;
+    background: var(--header-bg);
+    color: var(--header-text-color);
     border-radius: 10px;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    position: relative;
+}
+
+.theme-switcher-container {
+    position: absolute;
+    top: 20px;
+    right: 20px;
 }
 
 h1 {
@@ -57,7 +118,7 @@ h1 {
 }
 
 .card {
-    background: white;
+    background: var(--card-bg-color);
     border-radius: 10px;
     padding: 25px;
     margin-bottom: 20px;
@@ -110,10 +171,12 @@ h1 {
 
 .form-group input {
     padding: 10px;
-    border: 1px solid #ddd;
+    border: 1px solid var(--border-color);
     border-radius: 5px;
     width: 100%;
     margin-top: 5px;
+    background-color: var(--bg-color);
+    color: var(--text-color);
 }
 
 label {
@@ -125,11 +188,13 @@ label {
 textarea {
     width: 100%;
     padding: 12px;
-    border: 1px solid #ddd;
+    border: 1px solid var(--border-color);
     border-radius: 5px;
     resize: vertical;
     min-height: 200px;
     font-family: monospace;
+    background-color: var(--bg-color);
+    color: var(--text-color);
 }
 
 .quiz-controls {
@@ -180,7 +245,7 @@ textarea {
     left: 0;
     right: 0;
     bottom: 0;
-    background-color: #ccc;
+    background-color: var(--toggle-bg-color);
     transition: .4s;
     border-radius: 30px;
 }
@@ -216,7 +281,7 @@ input:checked + .toggle-slider:before {
 .question-container {
     margin-bottom: 25px;
     padding-bottom: 15px;
-    border-bottom: 1px solid #eee;
+    border-bottom: 1px solid var(--border-color);
 }
 
 .question-header {
@@ -245,19 +310,20 @@ input:checked + .toggle-slider:before {
 
 .option {
     padding: 12px;
-    border: 1px solid #ddd;
+    border: 1px solid var(--border-color);
     border-radius: 5px;
     cursor: pointer;
     transition: all 0.2s ease;
+    background-color: var(--option-bg-color);
 }
 
 .option:hover {
-    background-color: #f0f5ff;
+    background-color: var(--option-hover-bg-color);
 }
 
 .option.selected {
-    background-color: #e1f5fe;
-    border-color: var(--success);
+    background-color: var(--option-selected-bg-color);
+    border-color: var(--option-selected-border-color);
 }
 
 .navigation {
@@ -295,7 +361,7 @@ input:checked + .toggle-slider:before {
     margin-bottom: 15px;
     border-radius: 5px;
     border-left: 5px solid var(--gray);
-    background-color: #f8f9fa;
+    background-color: var(--card-bg-color);
 }
 
 .review-item.review-correct {
@@ -321,7 +387,7 @@ input:checked + .toggle-slider:before {
 }
 
 .explanation {
-    background-color: #e9ecef;
+    background-color: var(--explanation-bg-color);
     padding: 10px;
     border-radius: 5px;
     margin-top: 10px;
@@ -337,7 +403,7 @@ input:checked + .toggle-slider:before {
 }
 
 .instructions {
-    background-color: #e8f5e9;
+    background-color: var(--instructions-bg-color);
     padding: 15px;
     border-radius: 5px;
     margin-bottom: 15px;
@@ -345,7 +411,7 @@ input:checked + .toggle-slider:before {
 
 .sidebar {
     width: 250px;
-    background: white;
+    background: var(--card-bg-color);
     border-radius: 10px;
     padding: 20px;
     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
@@ -364,43 +430,6 @@ input:checked + .toggle-slider:before {
     gap: 10px;
 }
 
-.question-list-item {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
-    background-color: #f0f0f0;
-    cursor: pointer;
-    transition: all 0.2s ease;
-    border: none;
-    font-weight: bold;
-}
-
-.question-list-item.answered {
-    background-color: #28a745; /* Green for answered/checked */
-    color: white;
-}
-
-.question-list-item.flagged {
-    background-color: #ffc107; /* Orange for flagged */
-    color: #212529;
-}
-
-.question-list-item.active {
-    background-color: var(--primary);
-    color: white;
-}
-
-.question-list-item.answered.active {
-    background-color: #28a745;
-}
-
-.question-list-item.flagged.active {
-    background-color: var(--warning);
-}
-
 .review-submit-link {
     margin-top: 20px;
     text-align: center;
@@ -413,6 +442,44 @@ input:checked + .toggle-slider:before {
 
 .review-submit-link:hover {
     color: var(--secondary);
+}
+
+.question-list-item {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background-color: var(--qlist-item-bg-color);
+    cursor: pointer;
+    transition: all 0.2s ease;
+    border: none;
+    font-weight: bold;
+    color: var(--text-color);
+}
+
+.question-list-item.answered {
+    background-color: var(--qlist-item-answered-bg-color);
+    color: white;
+}
+
+.question-list-item.flagged {
+    background-color: var(--qlist-item-flagged-bg-color);
+    color: var(--dark);
+}
+
+.question-list-item.active {
+    background-color: var(--qlist-item-active-bg-color);
+    color: white;
+}
+
+.question-list-item.answered.active {
+    background-color: var(--qlist-item-answered-active-bg-color);
+}
+
+.question-list-item.flagged.active {
+    background-color: var(--qlist-item-flagged-active-bg-color);
 }
 
 #confirmation-panel h2 {
@@ -433,7 +500,7 @@ input:checked + .toggle-slider:before {
 }
 
 .summary-table td {
-    border: none;
+    border: 1px solid var(--border-color);
     padding: 5px;
     text-align: center;
     vertical-align: top;
@@ -466,15 +533,15 @@ input:checked + .toggle-slider:before {
 }
 
 .summary-item.status-answered {
-    background-color: #28a745; /* Green */
+    background-color: #28a745;
 }
 
 .summary-item.status-unanswered {
-    background-color: #6c757d; /* Gray */
+    background-color: #6c757d;
 }
 
 .summary-item.status-flagged {
-    background-color: #ffc107; /* Orange */
+    background-color: #ffc107;
     color: #212529;
 }
 
@@ -486,6 +553,10 @@ input:checked + .toggle-slider:before {
 @media (max-width: 768px) {
     .container {
         flex-direction: column;
+    }
+
+    main {
+        width: 100%;
     }
 
     .sidebar {
@@ -501,46 +572,9 @@ input:checked + .toggle-slider:before {
 }
 
 pre {
-    background-color: #f4f4f4;
+    background-color: var(--pre-bg-color);
     padding: 10px;
     border-radius: 5px;
     white-space: pre-wrap;
     word-wrap: break-word;
 }
-
-/* Add these styles to your CSS */
-
-.question-text {
-    word-wrap: break-word;
-    overflow-wrap: break-word;
-    hyphens: auto;
-}
-
-.question-header {
-    flex-wrap: wrap;
-}
-
-.flag-btn-question {
-    flex-shrink: 0;
-    margin-top: 10px;
-}
-
-/* Ensure the main content area doesn't push the sidebar */
-.container {
-    align-items: flex-start;
-}
-
-main {
-    min-width: 0; /* This allows the main content to shrink properly */
-}
-
-/* For the confirmation panel summary items */
-.summary-item {
-    word-break: break-word;
-}
-
-/* For options in questions */
-.option {
-    word-wrap: break-word;
-}
-
