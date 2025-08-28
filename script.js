@@ -127,6 +127,18 @@ document.addEventListener('DOMContentLoaded', function() {
         quizPanel.classList.remove('hidden');
         sidebar.classList.remove('hidden');
     });
+    confirmationSummary.addEventListener('click', (event) => {
+        const summaryItem = event.target.closest('.summary-item');
+        if (summaryItem && summaryItem.dataset.questionIndex) {
+            const questionIndex = parseInt(summaryItem.dataset.questionIndex, 10);
+            
+            confirmationPanel.classList.add('hidden');
+            quizPanel.classList.remove('hidden');
+            sidebar.classList.remove('hidden');
+
+            goToQuestion(questionIndex);
+        }
+    });
     
     // Import quiz from JSON and start
     function importQuiz() {
@@ -450,7 +462,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     }
                     tableBody += `
                         <td>
-                            <div class="summary-item ${statusClass}">
+                            <div class="summary-item ${statusClass}" data-question-index="${questionIndex}">
                                 <span class="summary-q-num">${questionIndex + 1}</span>
                                 <span class="summary-q-status">${status}</span>
                             </div>

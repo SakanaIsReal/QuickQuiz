@@ -431,6 +431,12 @@ input:checked + .toggle-slider:before {
     gap: 5px;
     min-height: 60px;
     justify-content: center;
+    cursor: pointer;
+    transition: transform 0.2s ease;
+}
+
+.summary-item:hover {
+    transform: scale(1.05);
 }
 
 .summary-q-num {
