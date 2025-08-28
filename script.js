@@ -93,21 +93,21 @@ document.addEventListener('DOMContentLoaded', function() {
                         "id": 1,
                         "question": "What is 2 + 2?",
                         "options": ["3", "4", "5", "6"],
-                        "correctAnswer": 1,
+                        "correctAnswer": "4",
                         "explanation": "Basic addition gives us 4"
                     },
                     {
                         "id": 2,
                         "question": "What is 5 × 3?",
                         "options": ["10", "15", "20", "25"],
-                        "correctAnswer": 1,
+                        "correctAnswer": "15",
                         "explanation": "5 multiplied by 3 equals 15"
                     },
                     {
                         "id": 3,
                         "question": "What is the square root of 81?",
                         "options": ["7", "8", "9", "10"],
-                        "correctAnswer": 2,
+                        "correctAnswer": "9",
                         "explanation": "The square root of a number, x, is a number that, when multiplied by itself, equals x. Since 9 × 9 = 81, the square root of 81 is 9."
                     }
                 ]
@@ -120,14 +120,14 @@ document.addEventListener('DOMContentLoaded', function() {
                         "id": 4,
                         "question": "What is H₂O?",
                         "options": ["Oxygen", "Hydrogen", "Water", "Carbon Dioxide"],
-                        "correctAnswer": 2,
+                        "correctAnswer": "Water",
                         "explanation": "H₂O is the chemical formula for water"
                     },
                     {
                         "id": 5,
                         "question": "What is the largest planet in our solar system?",
                         "options": ["Earth", "Mars", "Jupiter", "Saturn"],
-                        "correctAnswer": 2,
+                        "correctAnswer": "Jupiter",
                         "explanation": "Jupiter is the largest planet in the solar system, with a mass more than two and a half times that of all the other planets combined."
                     }
                 ]
@@ -408,7 +408,7 @@ document.addEventListener('DOMContentLoaded', function() {
         
         // Find the original correct answer text before shuffling
         const originalQuestion = quizData.sections.find(s => s.questions.some(q => q.id === questionData.id)).questions.find(q => q.id === questionData.id);
-        const originalCorrectOptionText = originalQuestion.options[originalQuestion.correctAnswer];
+        const originalCorrectOptionText = originalQuestion.correctAnswer;
         userAnswer.isCorrect = (questionData.options[optionIndex] === originalCorrectOptionText);
         
         const options = document.querySelectorAll('.option');
@@ -611,7 +611,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 const selectedOptionText = userAnswer.selectedOption !== null ? questionData.options[userAnswer.selectedOption] : 'No answer selected';
                 
                 const originalQuestion = quizData.sections.find(s => s.questions.some(q => q.id === questionData.id)).questions.find(q => q.id === questionData.id);
-                const originalCorrectOptionText = originalQuestion.options[originalQuestion.correctAnswer];
+                const originalCorrectOptionText = originalQuestion.correctAnswer;
 
                 const questionIndex = randomizedQuestions.findIndex(q => q.id === questionData.id);
 

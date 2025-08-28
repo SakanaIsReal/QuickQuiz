@@ -1,0 +1,19 @@
+{
+  "quizTitle": "Your Quiz Title",
+  "description": "Quiz description",
+  "sections": [
+    {
+      "sectionName": "Section One",
+      "instructions": "Section instructions",
+      "questions": [
+        {
+          "id": 1,
+          "question": "Question text?",
+          "options": ["Option A", "Option B", "Option C"],
+          "correctAnswer": "Option D",
+          "explanation": "Explanation for answer"
+        }
+      ]
+    }
+  ]
+}
