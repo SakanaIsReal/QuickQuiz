@@ -310,8 +310,7 @@ input:checked + .toggle-slider:before {
     margin-bottom: 25px;
     padding-bottom: 15px;
     border-bottom: 1px solid var(--border-color);
-}
-
+}
 .question-header {
     display: flex;
     justify-content: space-between;
@@ -638,4 +637,26 @@ pre {
 
 .btn.copied-animation {
     animation: copiedFade 0.5s ease-in-out forwards;
+}
+
+.summary-item.status-answered-icon {
+    background-color: #28a745;
+}
+
+.summary-item.status-unanswered-icon {
+    background-color: #6c757d;
+}
+
+.summary-item.status-flagged-icon {
+    background-color: #ffc107;
+    color: #212529;
+}
+
+.summary-q-status {
+    font-size: 1.2rem; /* Make icon larger */
+    font-weight: bold;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 1em; /* Ensure consistent height for icons */
 }

@@ -616,20 +616,20 @@ Requirements:
                 const questionIndex = i * numColumns + j;
                 if (questionIndex < userAnswers.length) {
                     const userAnswer = userAnswers[questionIndex];
-                    let status = 'Unanswered';
-                    let statusClass = 'status-unanswered';
+                    let statusIcon = '&#9711;'; // Unanswered: Large Circle
+                    let statusClass = 'status-unanswered-icon';
                     if (userAnswer.isFlagged) {
-                        status = 'Flagged';
-                        statusClass = 'status-flagged';
+                        statusIcon = '&#9873;'; // Flagged: Black Flag
+                        statusClass = 'status-flagged-icon';
                     } else if (userAnswer.selectedOption !== null) {
-                        status = 'Answered';
-                        statusClass = 'status-answered';
+                        statusIcon = '&#10003;'; // Answered: Check Mark
+                        statusClass = 'status-answered-icon';
                     }
                     tableBody += `
                         <td>
                             <div class="summary-item ${statusClass}" data-question-index="${questionIndex}">
                                 <span class="summary-q-num">${questionIndex + 1}</span>
-                                <span class="summary-q-status">${status}</span>
+                                <span class="summary-q-status">${statusIcon}</span>
                             </div>
                         </td>
                     `;
