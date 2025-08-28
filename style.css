@@ -433,7 +433,7 @@ input:checked + .toggle-slider:before {
 }
 
 .summary-table td {
-    border: 1px solid #ddd;
+    border: none;
     padding: 5px;
     text-align: center;
     vertical-align: top;
