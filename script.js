@@ -33,6 +33,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const downloadJsonBtn = document.getElementById('download-json-btn');
     const copyPromptBtn = document.getElementById('copy-prompt-btn');
     const showWrongAnswersBtn = document.getElementById('show-wrong-answers-btn');
+    const retryWrongAnswersBtn = document.getElementById('retry-wrong-answers-btn');
 
     // Quiz state
     let quizData = null;
@@ -216,6 +217,7 @@ Requirements:
     restartBtn.addEventListener('click', restartQuiz);
     timerToggle.addEventListener('change', toggleTimer);
     confirmSubmissionBtn.addEventListener('click', submitQuiz);
+    retryWrongAnswersBtn.addEventListener('click', retryWrongAnswers);
     cancelSubmissionBtn.addEventListener('click', () => {
         confirmationPanel.classList.add('hidden');
         quizPanel.classList.remove('hidden');
@@ -693,6 +695,14 @@ Requirements:
         resultsPanel.classList.remove('hidden');
         sidebar.classList.add('hidden');
         container.classList.add('sidebar-hidden');
+
+        // Hide retry button if no wrong answers
+        const wrongAnswers = userAnswers.filter(answer => !answer.isCorrect);
+        if (wrongAnswers.length === 0) {
+            retryWrongAnswersBtn.classList.add('hidden');
+        } else {
+            retryWrongAnswersBtn.classList.remove('hidden');
+        }
     }
 
     // Function to render the review section with optional filtering
@@ -767,6 +777,57 @@ Requirements:
         seedInput.value = '';
         sidebar.classList.add('hidden');
         container.classList.add('sidebar-hidden');
+    }
+
+    // Retry only wrong answers
+    function retryWrongAnswers() {
+        const wrongAnswers = userAnswers.filter(answer => !answer.isCorrect);
+
+        if (wrongAnswers.length === 0) {
+            alert('Great job! You got all answers correct. No wrong answers to retry.');
+            retryWrongAnswersBtn.classList.add('hidden'); // Hide button if no wrong answers
+            return;
+        }
+
+        // Create a new quizData object with only the wrong questions
+        const newQuizData = {
+            quizTitle: `Retry Wrong Answers (${quizData.quizTitle})`,
+            description: 'Questions you answered incorrectly.',
+            sections: []
+        };
+
+        // Group wrong answers by their original section
+        const sectionsMap = new Map();
+        wrongAnswers.forEach(answer => {
+            const sectionName = answer.questionData.sectionName;
+            if (!sectionsMap.has(sectionName)) {
+                sectionsMap.set(sectionName, {
+                    sectionName: sectionName,
+                    instructions: `Retry questions from ${sectionName}`,
+                    questions: []
+                });
+            }
+            sectionsMap.get(sectionName).questions.push(answer.questionData);
+        });
+
+        newQuizData.sections = Array.from(sectionsMap.values());
+
+        // Temporarily set jsonInput.value to the new quiz data string
+        // This is a workaround to reuse the importQuiz function
+        const originalJsonInput = jsonInput.value;
+        jsonInput.value = JSON.stringify(newQuizData, null, 2);
+
+        // Import the new quiz
+        importQuiz();
+
+        // Restore original jsonInput value (optional, depending on desired UX)
+        jsonInput.value = originalJsonInput;
+
+        // Hide results panel and show quiz panel
+        resultsPanel.classList.add('hidden');
+        quizPanel.classList.remove('hidden');
+        sidebar.classList.remove('hidden');
+        container.classList.remove('sidebar-hidden');
     }
 
     showWrongAnswersBtn.addEventListener('click', () => {

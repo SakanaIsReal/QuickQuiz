@@ -310,7 +310,8 @@ input:checked + .toggle-slider:before {
     margin-bottom: 25px;
     padding-bottom: 15px;
     border-bottom: 1px solid var(--border-color);
-}
+}
+
 .question-header {
     display: flex;
     justify-content: space-between;
@@ -659,4 +660,15 @@ pre {
     justify-content: center;
     align-items: center;
     height: 1em; /* Ensure consistent height for icons */
+}
+
+.results-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    margin-top: 20px;
+}
+
+#retry-wrong-answers-btn {
+    margin-left: auto;
 }
