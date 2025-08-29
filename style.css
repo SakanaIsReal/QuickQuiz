@@ -743,3 +743,25 @@ footer a:hover {
     z-index: 9999; /* Ensure it's on top */
     transform: translate(-50%, -50%); /* Center the heart on its coordinates */
 }
+
+.header-btn {
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    font-size: 1.5rem; /* Adjust icon size */
+    padding: 5px 10px; /* Smaller padding for a button with just an icon */
+    background-color: rgba(255, 255, 255, 0.2); /* Slightly transparent background */
+    border-radius: 5px; /* Make it square */
+    width: 40px; /* Fixed width and height for square button */
+    height: 40px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.header-btn:hover {
+    background-color: rgba(255, 255, 255, 0.4);
+    transform: scale(1.05);
+}

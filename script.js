@@ -227,6 +227,36 @@ Requirements:
             jsonError.classList.add('hidden'); // Also clear any error messages
         });
     }
+
+    const restartHomeBtn = document.getElementById('restart-home-btn');
+    if (restartHomeBtn) {
+        restartHomeBtn.addEventListener('click', () => {
+            // Reset quiz state
+            quizData = null;
+            randomizedQuestions = [];
+            userAnswers = [];
+            stopTimer();
+            secondsElapsed = 0;
+            timerToggle.checked = false;
+            timerDisplay.textContent = '00:00';
+            seedInput.value = '';
+            showingWrongAnswersOnly = false;
+
+            // Hide all panels and show import panel
+            quizPanel.classList.add('hidden');
+            resultsPanel.classList.add('hidden');
+            confirmationPanel.classList.add('hidden');
+            importPanel.classList.remove('hidden');
+
+            // Hide sidebar and reset container class
+            sidebar.classList.add('hidden');
+            container.classList.add('sidebar-hidden');
+
+            // Clear any error messages
+            jsonError.classList.add('hidden');
+        });
+    }
+
     cancelSubmissionBtn.addEventListener('click', () => {
         confirmationPanel.classList.add('hidden');
         quizPanel.classList.remove('hidden');
