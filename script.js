@@ -891,4 +891,52 @@ Requirements:
             showWrongAnswersBtn.classList.add('btn-secondary');
         }
     });
+
+    const heartEmoji = document.getElementById('heart-emoji');
+
+    if (heartEmoji) {
+        heartEmoji.addEventListener('click', (event) => {
+            const rect = heartEmoji.getBoundingClientRect();
+            const centerX = rect.left + rect.width / 2;
+            const centerY = rect.top + rect.height / 2;
+
+            for (let i = 0; i < 15; i++) { // Create 15 hearts
+                createAnimatedHeart(centerX, centerY);
+            }
+        });
+    }
+
+    function createAnimatedHeart(startX, startY) {
+        const heart = document.createElement('span');
+        heart.classList.add('animated-heart');
+        heart.innerHTML = '❤️'; // Or any other emoji/character
+
+        // Position the heart initially at the click location
+        heart.style.left = `${startX}px`;
+        heart.style.top = `${startY}px`;
+
+        document.body.appendChild(heart);
+
+        // Randomize animation properties
+        const angle = Math.random() * Math.PI * 2; // Full circle
+        const distance = Math.random() * 100 + 50; // 50 to 150px
+        const endX = startX + Math.cos(angle) * distance;
+        const endY = startY + Math.sin(angle) * distance - 100; // Float upwards
+
+        const duration = Math.random() * 1.5 + 1; // 1 to 2.5 seconds
+        const delay = Math.random() * 0.2; // Small delay for staggered effect
+        const rotation = Math.random() * 720 - 360; // -360 to 360 degrees
+
+        heart.animate([
+            { transform: `translate(-50%, -50%) rotate(0deg)`, opacity: 1 },
+            { transform: `translate(${endX - startX}px, ${endY - startY}px) rotate(${rotation}deg)`, opacity: 0 }
+        ], {
+            duration: duration * 1000,
+            delay: delay * 1000,
+            easing: 'ease-out',
+            fill: 'forwards'
+        }).onfinish = () => {
+            heart.remove(); // Remove heart after animation
+        };
+    }
 });
