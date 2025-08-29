@@ -220,6 +220,13 @@ Requirements:
     confirmSubmissionBtn.addEventListener('click', submitQuiz);
     retryWrongAnswersBtn.addEventListener('click', retryWrongAnswers);
     copyWrongAnswersPromptBtn.addEventListener('click', copyWrongAnswersPrompt);
+    const clearJsonBtn = document.getElementById('clear-json-btn');
+    if (clearJsonBtn) {
+        clearJsonBtn.addEventListener('click', () => {
+            jsonInput.value = '';
+            jsonError.classList.add('hidden'); // Also clear any error messages
+        });
+    }
     cancelSubmissionBtn.addEventListener('click', () => {
         confirmationPanel.classList.add('hidden');
         quizPanel.classList.remove('hidden');

@@ -49,7 +49,10 @@
                     <button id="copy-prompt-btn" class="btn btn-secondary">Copy Prompt</button>
                 </div>
                 <div class="form-group">
-                    <label for="json-input">Paste your JSON here:</label>
+                    <div style="display: flex; justify-content: space-between; align-items: center;">
+                        <label for="json-input">Paste your JSON here:</label>
+                        <button id="clear-json-btn" class="btn btn-secondary btn-sm">Clear JSON</button>
+                    </div>
                     <textarea id="json-input" placeholder="Paste your quiz JSON here..."></textarea>
                     <div id="json-error" class="error-message hidden"></div>
                 </div>
@@ -140,5 +143,8 @@
         </aside>
     </div>
     <script src="script.js"></script>
+    <footer>
+        <p>Made with ❤️ by <a href="https://github.com/SakanaIsReal/QuickQuiz">SakanaIsReal</a></p>
+    </footer>
 </body>
 </html>
